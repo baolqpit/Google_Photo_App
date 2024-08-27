@@ -81,7 +81,7 @@ class PhotoService {
     do {
       try {
         final response = await dio.get(
-          'https://photoslibrary.googleapis.com/v1/mediaItems',
+          '${_uploadBaseURL}mediaItems',
           options: Options(
             headers: {
               'Authorization': 'Bearer $accessToken',

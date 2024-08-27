@@ -23,6 +23,12 @@ class _AlbumScreensState extends State<AlbumScreens> {
     onWidgetBuildDone(() async => await userController.getAlbums());
     super.initState();
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    userController.albumList.clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,9 @@ class _AlbumScreensState extends State<AlbumScreens> {
         padding: const EdgeInsets.symmetric(
             vertical: Dimens.padding_vertical,
             horizontal: Dimens.padding_horizontal),
-        child: appController.isLoading.value ? const Center(child: CircularProgressIndicator()) : _buildAlbumBody()));
+        child: appController.isLoading.value
+            ? const Center(child: CircularProgressIndicator())
+            : _buildAlbumBody()));
   }
 
   _buildAlbumBody() {
@@ -38,9 +46,19 @@ class _AlbumScreensState extends State<AlbumScreens> {
       children: [_buildTitleAndButtonsAction(), _buildAlbumsList()],
     );
   }
-  
-  _buildAlbumsList(){
-    return Obx(() => Container());
+
+  _buildAlbumsList() {
+    return Obx(() => userController.albumList.isEmpty
+        ? Expanded(
+          child: Center(
+              child: AppText(
+                content: 'No Album Found, Create New',
+                fontWeight: FontWeight.bold,
+                textSize: Dimens.font_size_title,
+              ),
+            ),
+        )
+        : Container());
   }
 
   _buildTitleAndButtonsAction() {
