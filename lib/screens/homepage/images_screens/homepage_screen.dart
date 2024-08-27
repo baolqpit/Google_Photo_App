@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
-import 'package:google_photo_app/screens/homepage/image_details.dart';
+import 'package:google_photo_app/screens/homepage/images_screens/image_details.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';

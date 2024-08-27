@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/screens/app.dart';
-import 'package:google_photo_app/screens/homepage/homepage_screen.dart';
 import 'package:google_photo_app/services/auth_service.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';

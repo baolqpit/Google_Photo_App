@@ -29,6 +29,13 @@ class UserController extends GetxController {
 
   }
 
+  ///CREATE ALBUM
+  createAlbum({required String albumTitle}) async {
+    appController.isLoading.value = true;
+    await AlbumService().createAlbum(accessToken: token.value!, albumTitle: albumTitle);
+    appController.isLoading.value = false;
+  }
+
   ///OPEN GALLERY
   openGallery() async {
     appController.isLoading.value = true;
@@ -60,14 +67,6 @@ class UserController extends GetxController {
     if (res != null){
       mediaItemList.value = res.map<MediaItem>((json) => MediaItem.fromJson(json)).toList();
     }
-    appController.isLoading.value = false;
-  }
-
-  ///DELETE MEDIA ITEM BY ID
-  deleteMediaItemById({required String mediaItemId}) async {
-    appController.isLoading.value = true;
-    await PhotoService().deleteMediaItem(mediaItemId: mediaItemId, accessToken: token.value!);
-    await getAllMediaItems();
     appController.isLoading.value = false;
   }
 }

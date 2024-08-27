@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_photo_app/screens/homepage/album_screens.dart';
-import 'package:google_photo_app/screens/homepage/homepage_screen.dart';
+import 'package:google_photo_app/screens/homepage/albums_screens/album_screens.dart';
+import 'package:google_photo_app/screens/homepage/images_screens/homepage_screen.dart';
 
 class ScreensAndMenus {
   static List<BottomNavigationBarItem> listCustomerIcons =

@@ -3,7 +3,38 @@ import 'package:dio/dio.dart';
 class AlbumService {
   final Dio dio = Dio();
   final _baseAlbumURL = 'https://photoslibrary.googleapis.com/v1/';
-  ///CREATE ALBUM
+
+  /// CREATE ALBUM
+  Future<void> createAlbum({
+    required String accessToken,
+    required String albumTitle,
+  }) async {
+    try {
+      final response = await dio.post(
+        '${_baseAlbumURL}albums',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: {
+          'album': {'title': albumTitle},
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Album created successfully: ${response.data}');
+      } else {
+        print('Failed to create album: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Error creating album: ${e.response?.data ?? e.message}');
+    } catch (e) {
+      print('An unexpected error occurred: $e');
+    }
+  }
+
   /// GET LIST OF ALBUMS
   Future<List<dynamic>> getAlbums({required String accessToken}) async {
     List<dynamic> albumsList = [];

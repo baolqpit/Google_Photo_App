@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/screens/homepage/albums_screens/create_album_button.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
@@ -23,6 +24,7 @@ class _AlbumScreensState extends State<AlbumScreens> {
     onWidgetBuildDone(() async => await userController.getAlbums());
     super.initState();
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -43,22 +45,52 @@ class _AlbumScreensState extends State<AlbumScreens> {
 
   _buildAlbumBody() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [_buildTitleAndButtonsAction(), _buildAlbumsList()],
     );
   }
 
   _buildAlbumsList() {
-    return Obx(() => userController.albumList.isEmpty
-        ? Expanded(
-          child: Center(
-              child: AppText(
-                content: 'No Album Found, Create New',
-                fontWeight: FontWeight.bold,
-                textSize: Dimens.font_size_title,
+    return Obx(
+      () => userController.albumList.isEmpty
+          ? Expanded(
+              child: Center(
+                child: AppText(
+                  content: 'No Album Found, Create New',
+                  fontWeight: FontWeight.bold,
+                  textSize: Dimens.font_size_title,
+                ),
               ),
+            )
+          : Wrap(
+              spacing: 3.0,
+              runSpacing: 3.0,
+              alignment: WrapAlignment.start,
+              children: userController.albumList
+                  .map((album) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                            width: 120, // Calculate width for 5 images per row
+                            height: 120,
+                            child: album.coverPhotoBaseUrl == ""
+                                ? const Center(
+                                    child: Icon(Icons.photo),
+                                  )
+                                : Image.network(
+                                    "${album!.coverPhotoBaseUrl}=w600-h400",
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                      Dimens.height5,
+                      AppText(content: album.title),
+                      Dimens.height5,
+                      AppText(content: album.mediaItemsCount == null ? "0" : album.mediaItemsCount.toString(), color: AppColor.grey,)
+                    ],
+                  ))
+                  .toList(),
             ),
-        )
-        : Container());
+    );
   }
 
   _buildTitleAndButtonsAction() {
@@ -70,14 +102,7 @@ class _AlbumScreensState extends State<AlbumScreens> {
           fontWeight: FontWeight.bold,
           textSize: Dimens.font_size_title,
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(
-              vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
-          decoration: BoxDecoration(
-              color: AppColor.lightGrey.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(Dimens.circular12)),
-          child: const Icon(Icons.add),
-        ),
+        const CreateAlbumButton()
       ],
     );
   }
