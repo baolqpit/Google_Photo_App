@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
 import 'package:google_photo_app/share/functions/functions.dart';
@@ -23,12 +24,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.all(Dimens.padding_8), // Adds some padding around the avatar
+          padding: const EdgeInsets.all(
+              Dimens.padding_8), // Adds some padding around the avatar
           child: CircleAvatar(
             radius: 20, // Sets the size of the avatar
             backgroundImage: NetworkImage(userController.user.value!.photoUrl!),
@@ -36,6 +39,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ),
         title: AppText(content: '${userController.user.value!.displayName}'),
       ),
+      body: _buildHomepageBody(),
+    );
+  }
+
+  _buildHomepageBody() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.padding_horizontal, vertical: Dimens.padding_vertical),
+      child: Column(
+        children: <Widget>[_buildButtonAction()],
+      ),
+    );
+  }
+
+  _buildButtonAction() {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
+      child: AppText(content: 'Upload', color: AppColor.white,),
     );
   }
 }
