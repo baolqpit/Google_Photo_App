@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/screens/app.dart';
 import 'package:google_photo_app/screens/homepage/homepage_screen.dart';
 import 'package:google_photo_app/services/auth_service.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
@@ -60,7 +61,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       GoogleSignInAuthentication auth = await res.authentication;
                       userController.token.value = auth.accessToken ?? "";
                       print("Token: ${userController.token.value}");
-                      Get.to(() => const HomepageScreen());
+                      Get.to(() => const PhotoApp());
                     }
                   },
                   child: Row(

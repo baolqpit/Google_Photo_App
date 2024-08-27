@@ -18,37 +18,23 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
     onWidgetBuildDone(() async {
       await userController.getAlbums();
       await userController.getAllMediaItems();
     });
-    super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     userController.imagePath.value = "";
+    userController.mediaItemList.clear();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(
-              Dimens.padding_8), // Adds some padding around the avatar
-          child: CircleAvatar(
-            radius: 20, // Sets the size of the avatar
-            backgroundImage: NetworkImage(userController.user.value!.photoUrl!),
-          ),
-        ),
-        title: AppText(content: '${userController.user.value!.displayName}'),
-      ),
-      body: _buildHomepageBody(),
-    );
+    return _buildHomepageBody();
   }
 
   _buildHomepageBody() {
@@ -57,16 +43,49 @@ class _HomepageScreenState extends State<HomepageScreen> {
           horizontal: Dimens.padding_horizontal,
           vertical: Dimens.padding_vertical),
       child: Column(
-        children: <Widget>[_buildButtonAction()],
+        children: <Widget>[
+          _buildImagesList(),
+          // _buildButtonAction()
+        ],
       ),
     );
+  }
+
+  _buildImagesList() {
+    return Obx(() => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        AppText(
+          content: 'Images',
+          fontWeight: FontWeight.bold,
+          textSize: Dimens.font_size_title,
+        ),
+        Dimens.height10,
+        // Ensure to use `Wrap` with a fixed width for each image
+        Wrap(
+          spacing: 3.0,
+          runSpacing: 3.0,
+          alignment: WrapAlignment.start,
+          children: userController.mediaItemList
+              .map((item) => SizedBox(
+            width: 120, // Calculate width for 5 images per row
+            height: 120,
+            child: Image.network(
+              "${item!.baseUrl}=w600-h400",
+              fit: BoxFit.cover,
+            ),
+          ))
+              .toList(),
+        ),
+      ],
+    ));
   }
 
   _buildButtonAction() {
     return ElevatedButton(
       onPressed: () async {
         await userController.openGallery();
-        if (userController.imagePath.value != ""){
+        if (userController.imagePath.value != "") {
           await userController.uploadImages(userController.imagePath.value!);
         }
       },

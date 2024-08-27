@@ -12,6 +12,7 @@ class UserController extends GetxController {
   Rx<String?> token = Rx<String?>("");
   Rx<String?> imagePath = Rx<String?>("");
   RxList<MediaItem?> mediaItemList = RxList<MediaItem?>([]);
+  RxList<dynamic?> listImgUrl = RxList<dynamic?>([]);
 
   ///GET ALBUMS
   getAlbums() async {
@@ -42,6 +43,8 @@ class UserController extends GetxController {
   ///GET ALL MEDIA ITEMS
   getAllMediaItems() async{
     var res = await PhotoService().getMediaItems(accessToken: token.value!);
-    mediaItemList.value = res.map<MediaItem>((json) => MediaItem.fromJson(json)).toList();
+    if (res != null){
+      mediaItemList.value = res.map<MediaItem>((json) => MediaItem.fromJson(json)).toList();
+    }
   }
 }
