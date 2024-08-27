@@ -19,7 +19,7 @@ class _CreateAlbumButtonState extends State<CreateAlbumButton> {
   @override
   void dispose() {
     // TODO: implement dispose
-    albumNameController.clear();
+    userController.albumList.clear();
     super.dispose();
   }
   @override

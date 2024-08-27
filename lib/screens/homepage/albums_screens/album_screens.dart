@@ -64,7 +64,7 @@ class _AlbumScreensState extends State<AlbumScreens> {
             )
           : Wrap(
               spacing: 3.0,
-              runSpacing: 3.0,
+              runSpacing: Dimens.sizeValue15,
               alignment: WrapAlignment.start,
               children: userController.albumList
                   .map((album) => Column(
@@ -83,7 +83,7 @@ class _AlbumScreensState extends State<AlbumScreens> {
                                   ),
                           ),
                       Dimens.height5,
-                      AppText(content: album.title),
+                      SizedBox(width: 120,child: AppText(content: album.title, maxLine: 1,)),
                       Dimens.height5,
                       AppText(content: album.mediaItemsCount == null ? "0" : album.mediaItemsCount.toString(), color: AppColor.grey,)
                     ],
