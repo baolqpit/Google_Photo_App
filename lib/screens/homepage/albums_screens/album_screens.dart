@@ -46,7 +46,7 @@ class _AlbumScreensState extends State<AlbumScreens> {
   _buildAlbumBody() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildTitleAndButtonsAction(), _buildAlbumsList()],
+      children: [_buildTitleAndButtonsAction(), Dimens.height10, _buildAlbumsList()],
     );
   }
 
