@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
-import 'package:google_photo_app/models/media_item/media_item.dart';
-import 'package:google_photo_app/share/app_general/app_color.dart';
-import 'package:google_photo_app/share/dimens/dimens.dart';
 import 'package:google_photo_app/share/widgets/custom_app_bar.dart';
 
 class ImageDetails extends StatefulWidget {

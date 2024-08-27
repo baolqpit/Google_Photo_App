@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/screens/homepage/image_details.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
@@ -15,6 +16,7 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
+  final AppController appController = Get.find();
   final UserController userController = Get.find();
   final ScrollController scrollController = ScrollController();
 
@@ -45,7 +47,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
       padding: const EdgeInsets.symmetric(
           horizontal: Dimens.padding_horizontal,
           vertical: Dimens.padding_vertical),
-      child: SingleChildScrollView(
+      child: Obx(() => appController.isLoading.value ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
         controller: scrollController,
         scrollDirection: Axis.vertical,
         child: Column(
@@ -54,7 +56,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
             // _buildButtonAction()
           ],
         ),
-      ),
+      )),
     );
   }
 
@@ -62,10 +64,16 @@ class _HomepageScreenState extends State<HomepageScreen> {
     return Obx(() => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AppText(
-              content: 'Images',
-              fontWeight: FontWeight.bold,
-              textSize: Dimens.font_size_title,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppText(
+                  content: 'Images',
+                  fontWeight: FontWeight.bold,
+                  textSize: Dimens.font_size_title,
+                ),
+                _buildButtonAction()
+              ],
             ),
             Dimens.height10,
             // Ensure to use `Wrap` with a fixed width for each image
@@ -97,13 +105,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
         await userController.openGallery();
         if (userController.imagePath.value != "") {
           await userController.uploadImages(userController.imagePath.value!);
+          await userController.getAllMediaItems();
         }
       },
-      style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
-      child: AppText(
-        content: 'Upload',
-        color: AppColor.white,
-      ),
+      style: ElevatedButton.styleFrom(backgroundColor: AppColor.white),
+      child: Icon(Icons.add),
     );
   }
 }
