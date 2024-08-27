@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   bool showReturnButton;
   final double borderRadius; // Added to control corner radius
 
-  CustomAppBar({
+  CustomAppBar({super.key,
     required this.title,
     required this.showReturnButton,
     this.borderRadius = 16.0, // Default corner radius

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/screens/user/user_info.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
@@ -56,9 +57,12 @@ class _PhotoAppState extends State<PhotoApp> {
       leading: Padding(
         padding: const EdgeInsets.all(
             Dimens.padding_8), // Adds some padding around the avatar
-        child: CircleAvatar(
-          radius: 20, // Sets the size of the avatar
-          backgroundImage: NetworkImage(userController.user.value!.photoUrl!),
+        child: GestureDetector(
+          onTap: () => Get.to(() => const UserInfoScreen()),
+          child: CircleAvatar(
+            radius: 20, // Sets the size of the avatar
+            backgroundImage: NetworkImage(userController.user.value!.photoUrl!),
+          ),
         ),
       ),
       title: AppText(content: '${userController.user.value!.displayName}'),
