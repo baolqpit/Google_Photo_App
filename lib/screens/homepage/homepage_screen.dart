@@ -26,6 +26,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    userController.imagePath.value = "";
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +52,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   _buildHomepageBody() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Dimens.padding_horizontal, vertical: Dimens.padding_vertical),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.padding_horizontal,
+          vertical: Dimens.padding_vertical),
       child: Column(
         children: <Widget>[_buildButtonAction()],
       ),
@@ -54,9 +63,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
 
   _buildButtonAction() {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () async {
+        await userController.openGallery();
+        if (userController.imagePath.value != ""){
+          await userController.uploadImages(userController.imagePath.value!);
+        }
+      },
       style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
-      child: AppText(content: 'Upload', color: AppColor.white,),
+      child: AppText(
+        content: 'Upload',
+        color: AppColor.white,
+      ),
     );
   }
 }
