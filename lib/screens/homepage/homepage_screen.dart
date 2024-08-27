@@ -24,7 +24,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
   void initState() {
     super.initState();
     onWidgetBuildDone(() async {
-      await userController.getAlbums();
       await userController.getAllMediaItems();
     });
   }
@@ -76,7 +75,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
               ],
             ),
             Dimens.height10,
-            // Ensure to use `Wrap` with a fixed width for each image
             Wrap(
               spacing: 3.0,
               runSpacing: 3.0,
@@ -100,16 +98,35 @@ class _HomepageScreenState extends State<HomepageScreen> {
   }
 
   _buildButtonAction() {
-    return ElevatedButton(
-      onPressed: () async {
-        await userController.openGallery();
-        if (userController.imagePath.value != "") {
-          await userController.uploadImages(userController.imagePath.value!);
-          await userController.getAllMediaItems();
-        }
-      },
-      style: ElevatedButton.styleFrom(backgroundColor: AppColor.white),
-      child: Icon(Icons.add),
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+          decoration: BoxDecoration(
+            color: AppColor.lightGrey.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(Dimens.circular12)
+          ),
+          child: AppText(content: 'Select', color: AppColor.black,),
+        ),
+        Dimens.width10,
+        GestureDetector(
+          onTap: () async {
+            await userController.openGallery();
+            if (userController.imagePath.value != "") {
+              await userController.uploadImages(userController.imagePath.value!);
+              await userController.getAllMediaItems();
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+            decoration: BoxDecoration(
+                color: AppColor.lightGrey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(Dimens.circular12)
+            ),
+            child: const Icon(Icons.add),
+          ),
+        ),
+      ],
     );
   }
 }

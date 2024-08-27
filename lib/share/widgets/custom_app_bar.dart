@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
@@ -34,9 +33,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             showReturnButton
                 ? IconButton(
               onPressed: () => Get.back(),
-              icon: Icon(Icons.arrow_back_ios_new, color: AppColor.primary),
+              icon: const Icon(Icons.arrow_back_ios_new, color: AppColor.primary),
             )
-                : SizedBox(),
+                : const SizedBox(),
             Expanded(
               child: Center(
                 child: AppText(
@@ -54,5 +53,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

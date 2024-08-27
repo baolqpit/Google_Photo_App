@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_photo_app/screens/homepage/album_screens.dart';
 import 'package:google_photo_app/screens/homepage/homepage_screen.dart';
 
 class ScreensAndMenus {
@@ -14,7 +15,7 @@ class ScreensAndMenus {
   ];
 
   static List<Widget> listCustomerScreens = [
-    HomepageScreen(),
-    Container()
+    const HomepageScreen(),
+    const AlbumScreens()
   ];
 }

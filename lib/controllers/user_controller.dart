@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:google_photo_app/api/user_api.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
+import 'package:google_photo_app/models/album_model/album_model.dart';
 import 'package:google_photo_app/models/media_item/media_item.dart';
 import 'package:google_photo_app/services/photo_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -14,7 +15,8 @@ class UserController extends GetxController {
   Rx<String?> token = Rx<String?>("");
   Rx<String?> imagePath = Rx<String?>("");
   RxList<MediaItem?> mediaItemList = RxList<MediaItem?>([]);
-  RxList<dynamic?> listImgUrl = RxList<dynamic?>([]);
+  RxList<AlbumModel> albumList = RxList<AlbumModel>([]);
+  Rx<int?> mediaItemIndex = Rx<int?>(null);
 
   ///GET ALBUMS
   getAlbums() async {
@@ -56,6 +58,14 @@ class UserController extends GetxController {
     if (res != null){
       mediaItemList.value = res.map<MediaItem>((json) => MediaItem.fromJson(json)).toList();
     }
+    appController.isLoading.value = false;
+  }
+
+  ///DELETE MEDIA ITEM BY ID
+  deleteMediaItemById({required String mediaItemId}) async {
+    appController.isLoading.value = true;
+    await PhotoService().deleteMediaItem(mediaItemId: mediaItemId, accessToken: token.value!);
+    await getAllMediaItems();
     appController.isLoading.value = false;
   }
 }

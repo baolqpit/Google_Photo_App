@@ -24,7 +24,7 @@ class PhotoService {
           ));
       if (response.statusCode == 200) {
         print('Upload successful: ${response.data}');
-        return response.data;  // Upload token returned
+        return response.data; // Upload token returned
       } else {
         print('Failed to upload image: ${response.statusCode}');
         return null;
@@ -39,7 +39,8 @@ class PhotoService {
   }
 
   ///CREATE MEDIA ITEMS
-  Future<void> createMediaItems({required String uploadToken, required String accessToken}) async {
+  Future<void> createMediaItems(
+      {required String uploadToken, required String accessToken}) async {
     try {
       final data = {
         "newMediaItems": [
@@ -74,7 +75,7 @@ class PhotoService {
   }
 
   ///GET MEDIA ITEMS
-  Future<List<dynamic>> getMediaItems({required String accessToken}) async{
+  Future<List<dynamic>> getMediaItems({required String accessToken}) async {
     List<dynamic> allMediaItems = [];
     String? nextPageToken;
     do {
@@ -107,5 +108,29 @@ class PhotoService {
       }
     } while (nextPageToken != null);
     return allMediaItems;
+  }
+
+  ///DELETE MEDIA ITEMS
+  Future<void> deleteMediaItem(
+      {required String mediaItemId, required String accessToken}) async {
+    try {
+      final response = await dio.delete(
+        '${_uploadBaseURL}mediaItemId',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        print('Media item delete successfully: ${response.data}');
+      } else {
+        print('Failed to delete media item: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Dio error: ${e.response?.statusCode} ${e.response?.data}');
+    } catch (e) {
+      print('Error deleting media item: $e');
+    }
   }
 }
