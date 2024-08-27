@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/screens/homepage/image_details.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
@@ -15,6 +16,7 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen> {
   final UserController userController = Get.find();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   void dispose() {
     userController.imagePath.value = "";
     userController.mediaItemList.clear();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -42,43 +45,50 @@ class _HomepageScreenState extends State<HomepageScreen> {
       padding: const EdgeInsets.symmetric(
           horizontal: Dimens.padding_horizontal,
           vertical: Dimens.padding_vertical),
-      child: Column(
-        children: <Widget>[
-          _buildImagesList(),
-          // _buildButtonAction()
-        ],
+      child: SingleChildScrollView(
+        controller: scrollController,
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            _buildImagesList(),
+            // _buildButtonAction()
+          ],
+        ),
       ),
     );
   }
 
   _buildImagesList() {
     return Obx(() => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        AppText(
-          content: 'Images',
-          fontWeight: FontWeight.bold,
-          textSize: Dimens.font_size_title,
-        ),
-        Dimens.height10,
-        // Ensure to use `Wrap` with a fixed width for each image
-        Wrap(
-          spacing: 3.0,
-          runSpacing: 3.0,
-          alignment: WrapAlignment.start,
-          children: userController.mediaItemList
-              .map((item) => SizedBox(
-            width: 120, // Calculate width for 5 images per row
-            height: 120,
-            child: Image.network(
-              "${item!.baseUrl}=w600-h400",
-              fit: BoxFit.cover,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AppText(
+              content: 'Images',
+              fontWeight: FontWeight.bold,
+              textSize: Dimens.font_size_title,
             ),
-          ))
-              .toList(),
-        ),
-      ],
-    ));
+            Dimens.height10,
+            // Ensure to use `Wrap` with a fixed width for each image
+            Wrap(
+              spacing: 3.0,
+              runSpacing: 3.0,
+              alignment: WrapAlignment.start,
+              children: userController.mediaItemList
+                  .map((item) => GestureDetector(
+                        onTap: () => Get.to(() => ImageDetails(initialIndex: userController.mediaItemList.indexOf(item),)),
+                        child: SizedBox(
+                          width: 120, // Calculate width for 5 images per row
+                          height: 120,
+                          child: Image.network(
+                            "${item!.baseUrl}=w600-h400",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ],
+        ));
   }
 
   _buildButtonAction() {
