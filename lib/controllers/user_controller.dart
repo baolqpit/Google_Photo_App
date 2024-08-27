@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:google_photo_app/api/user_api.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/models/album_model/album_model.dart';
 import 'package:google_photo_app/models/media_item/media_item.dart';
