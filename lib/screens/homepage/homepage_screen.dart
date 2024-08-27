@@ -21,6 +21,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
     // TODO: implement initState
     onWidgetBuildDone(() async {
       await userController.getAlbums();
+      await userController.getAllMediaItems();
     });
     super.initState();
   }

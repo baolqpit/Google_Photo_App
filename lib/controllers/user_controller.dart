@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:google_photo_app/api/user_api.dart';
+import 'package:google_photo_app/models/media_item/media_item.dart';
 import 'package:google_photo_app/services/photo_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,6 +11,7 @@ class UserController extends GetxController {
   Rx<GoogleSignInAccount?> user = Rx<GoogleSignInAccount?>(null);
   Rx<String?> token = Rx<String?>("");
   Rx<String?> imagePath = Rx<String?>("");
+  RxList<MediaItem?> mediaItemList = RxList<MediaItem?>([]);
 
   ///GET ALBUMS
   getAlbums() async {
@@ -33,5 +37,11 @@ class UserController extends GetxController {
       return;
     }
     await PhotoService().createMediaItems(uploadToken: uploadToken, accessToken: token.value!);
+  }
+
+  ///GET ALL MEDIA ITEMS
+  getAllMediaItems() async{
+    var res = await PhotoService().getMediaItems(accessToken: token.value!);
+    mediaItemList.value = res.map<MediaItem>((json) => MediaItem.fromJson(json)).toList();
   }
 }

@@ -71,4 +71,40 @@ class PhotoService {
       print('Error creating media item: $e');
     }
   }
+
+  ///GET MEDIA ITEMS
+  Future<List<dynamic>> getMediaItems({required String accessToken}) async{
+    List<dynamic> allMediaItems = [];
+    String? nextPageToken;
+    do {
+      try {
+        final response = await dio.get(
+          'https://photoslibrary.googleapis.com/v1/mediaItems',
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+              'Content-Type': 'application/json',
+            },
+          ),
+          queryParameters: {
+            'pageSize': 100, // Adjust the number of items per page if needed
+            'pageToken': nextPageToken,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          List<dynamic> mediaItems = response.data['mediaItems'] ?? [];
+          allMediaItems.addAll(mediaItems);
+          nextPageToken = response.data['nextPageToken'];
+        } else {
+          print('Failed to retrieve media items: ${response.statusCode}');
+          break;
+        }
+      } on DioException catch (e) {
+        print('Error retrieving media items: ${e.response?.data}');
+        break;
+      }
+    } while (nextPageToken != null);
+    return allMediaItems;
+  }
 }
