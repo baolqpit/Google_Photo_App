@@ -47,22 +47,25 @@ class _AlbumScreensState extends State<AlbumScreens> {
   }
 
   _buildAlbumBody() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTitleAndButtonsAction(),
-        Dimens.height10,
-        Obx(() => albumController.albumList.isEmpty
-            ? Expanded(
-              child: Center(
-                  child: AppText(
-                    content: "No albums found. Please Create New",
-                    fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTitleAndButtonsAction(),
+          Dimens.height10,
+          Obx(() => albumController.albumList.isEmpty
+              ? Expanded(
+                child: Center(
+                    child: AppText(
+                      content: "No albums found. Please Create New",
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-            )
-            : _buildAlbumsList())
-      ],
+              )
+              : _buildAlbumsList())
+        ],
+      ),
     );
   }
 
