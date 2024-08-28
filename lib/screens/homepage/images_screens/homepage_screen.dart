@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
@@ -46,16 +48,18 @@ class _HomepageScreenState extends State<HomepageScreen> {
       padding: const EdgeInsets.symmetric(
           horizontal: Dimens.padding_horizontal,
           vertical: Dimens.padding_vertical),
-      child: Obx(() => appController.isLoading.value ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
-        controller: scrollController,
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            _buildImagesList(),
-            // _buildButtonAction()
-          ],
-        ),
-      )),
+      child: Obx(() => appController.isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              controller: scrollController,
+              scrollDirection: Axis.vertical,
+              child: Column(
+                children: <Widget>[
+                  _buildImagesList(),
+                  // _buildButtonAction()
+                ],
+              ),
+            )),
     );
   }
 
@@ -79,50 +83,144 @@ class _HomepageScreenState extends State<HomepageScreen> {
               spacing: 3.0,
               runSpacing: 3.0,
               alignment: WrapAlignment.start,
-              children: userController.mediaItemList
-                  .map((item) => GestureDetector(
-                        onTap: () => Get.to(() => ImageDetails(initialIndex: userController.mediaItemList.indexOf(item),)),
-                        child: SizedBox(
-                          width: 120, // Calculate width for 5 images per row
-                          height: 120,
-                          child: Image.network(
-                            "${item!.baseUrl}=w600-h400",
-                            fit: BoxFit.cover,
-                          ),
+              children:
+                  List.generate(userController.mediaItemList.length, (index) {
+                var item = userController.mediaItemList[index];
+                return Stack(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: appController.selectingModeIsOn.value
+                          ? () {
+                              setState(() {
+                                userController.imageSelectedList[index]
+                                        ['isSelected'] =
+                                    !userController.imageSelectedList[index]
+                                        ['isSelected'];
+                              });
+                            }
+                          : () => Get.to(() => ImageDetails(
+                                initialIndex: index,
+                              )),
+                      child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Image.network(
+                          "${item!.baseUrl}=w600-h400",
+                          fit: BoxFit.cover,
                         ),
-                      ))
-                  .toList(),
+                      ),
+                    ),
+                    Obx(() =>
+                        userController.imageSelectedList[index]['isSelected']
+                            ? const Positioned(
+                                bottom: 5,
+                                right: 5,
+                                child: CircleAvatar(
+                                  radius: 15,
+                                  backgroundColor: AppColor.primary,
+                                  child: Icon(
+                                    Icons.check,
+                                    color: AppColor.white,
+                                  ),
+                                ),
+                              )
+                            : const SizedBox())
+                  ],
+                );
+              }),
             ),
           ],
         ));
   }
 
   _buildButtonAction() {
+    return Obx(() => appController.selectingModeIsOn.value
+        ? _buildSelectModeButtons()
+        : _buildUnSelectModeButtons());
+  }
+
+  _buildSelectModeButtons() {
     return Row(
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
-          decoration: BoxDecoration(
-            color: AppColor.lightGrey.withOpacity(0.5),
-            borderRadius: BorderRadius.circular(Dimens.circular12)
+        GestureDetector(
+          onTap: () {
+            userController.imageSelectedList.value = List.generate(userController.mediaItemList.length, (_) => {
+              "id": userController.mediaItemList[_]!.id,
+              "isSelected": true,
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+            decoration: BoxDecoration(
+                color: AppColor.lightGrey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(Dimens.circular12)),
+            child: AppText(
+              content: 'Select all',
+              color: AppColor.black,
+            ),
           ),
-          child: AppText(content: 'Select', color: AppColor.black,),
+        ),
+        Dimens.width10,
+        GestureDetector(
+          onTap: () async {
+            appController.selectingModeIsOn.value = false;
+            userController.imageSelectedList.value = List.generate(userController.mediaItemList.length, (_) => {
+              "id": userController.mediaItemList[_]!.id,
+              "isSelected": false,
+            });
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+            decoration: BoxDecoration(
+                color: AppColor.lightGrey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(Dimens.circular12)),
+            child: AppText(
+              content: 'Cancel',
+              color: AppColor.black,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  _buildUnSelectModeButtons() {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            appController.selectingModeIsOn.value = true;
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+            decoration: BoxDecoration(
+                color: AppColor.lightGrey.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(Dimens.circular12)),
+            child: AppText(
+              content: 'Select',
+              color: AppColor.black,
+            ),
+          ),
         ),
         Dimens.width10,
         GestureDetector(
           onTap: () async {
             await userController.openGallery();
             if (userController.imagePath.value != "") {
-              await userController.uploadImages(userController.imagePath.value!);
+              await userController
+                  .uploadImages(userController.imagePath.value!);
               await userController.getAllMediaItems();
             }
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
             decoration: BoxDecoration(
                 color: AppColor.lightGrey.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(Dimens.circular12)
-            ),
+                borderRadius: BorderRadius.circular(Dimens.circular12)),
             child: const Icon(Icons.add),
           ),
         ),

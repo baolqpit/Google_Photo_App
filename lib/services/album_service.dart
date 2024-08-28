@@ -71,7 +71,34 @@ class AlbumService {
     } catch (e) {
       print('An unexpected error occurred: $e');
     }
-
     return albumsList;
+  }
+
+  ///ADDING MEDIA ITEM TO AN ALBUM
+  Future<void> addingMediaItemsToAnAlbum(
+      {required List<String> listMediaItemId,
+      required String albumId,
+      required String accessToken}) async {
+    try {
+      final response =
+          await dio.post("${_baseAlbumURL}albums/$albumId:batchAddMediaItems",
+              options: Options(
+                headers: {
+                  'Authorization': 'Bearer $accessToken',
+                  'Content-Type': 'application/json',
+                },
+              ),
+              data: {"mediaItemIds": listMediaItemId});
+      if (response.statusCode == 200) {
+        print('Add media item to album successfully: ${response.data}');
+      } else {
+        print('Failed to add media item to album: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print(
+          'Error adding media item to an albums: ${e.response?.data ?? e.message}');
+    } catch (e) {
+      print('An unexpected error occurred: $e');
+    }
   }
 }

@@ -16,6 +16,7 @@ class UserController extends GetxController {
   Rx<String?> imagePath = Rx<String?>("");
   RxList<MediaItem?> mediaItemList = RxList<MediaItem?>([]);
   RxList<AlbumModel> albumList = RxList<AlbumModel>([]);
+  RxList<dynamic> imageSelectedList = RxList([]);
   Rx<int?> mediaItemIndex = Rx<int?>(null);
 
   ///GET ALBUMS
@@ -66,6 +67,11 @@ class UserController extends GetxController {
     var res = await PhotoService().getMediaItems(accessToken: token.value!);
     if (res != null){
       mediaItemList.value = res.map<MediaItem>((json) => MediaItem.fromJson(json)).toList();
+      imageSelectedList.value = List.generate(mediaItemList.length, (_) =>
+      {
+        'id': mediaItemList[_]!.id,
+        'isSelected': false
+      });
     }
     appController.isLoading.value = false;
   }
