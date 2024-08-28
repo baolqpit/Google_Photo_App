@@ -15,20 +15,10 @@ class UserController extends GetxController {
   Rx<String?> token = Rx<String?>("");
   Rx<String?> imagePath = Rx<String?>("");
   RxList<MediaItem?> mediaItemList = RxList<MediaItem?>([]);
-  RxList<AlbumModel> albumList = RxList<AlbumModel>([]);
   RxList<dynamic> imageSelectedList = RxList([]);
   Rx<int?> mediaItemIndex = Rx<int?>(null);
 
-  ///GET ALBUMS
-  getAlbums() async {
-    appController.isLoading.value = true;
-    var res = await AlbumService().getAlbums(accessToken: token.value!);
-    if(res != null){
-      albumList.value = res.map<AlbumModel>((json) => AlbumModel.fromJson(json)).toList();
-    }
-    appController.isLoading.value = false;
 
-  }
 
   ///CREATE ALBUM
   createAlbum({required String albumTitle}) async {
@@ -76,12 +66,7 @@ class UserController extends GetxController {
     appController.isLoading.value = false;
   }
 
-  ///ADD ITEMS TO ALBUM
-  addItemsToAlbum({required String albumId}) async {
-    appController.isLoading.value = true;
-    List<String> listMediaItemId = imageSelectedList.where((image) => image['isSelected'] == true).map<String>((image) => image['id']).toList();
-    print(listMediaItemId);
-    await AlbumService().addingMediaItemsToAnAlbum(listMediaItemId: listMediaItemId, albumId: albumId, accessToken: token.value!);
-    appController.isLoading.value = false;
-  }
+
+
+
 }

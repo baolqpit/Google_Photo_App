@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_photo_app/controllers/album_controller.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
@@ -21,17 +22,18 @@ class ChooseAlbumToShareScreen extends StatefulWidget {
 class _ChooseAlbumToShareScreenState extends State<ChooseAlbumToShareScreen> {
   final UserController userController = Get.find();
   final AppController appController = Get.find();
+  final AlbumController albumController = Get.find();
   @override
   void initState() {
     // TODO: implement initState
-    onWidgetBuildDone(() async => await userController.getAlbums());
+    onWidgetBuildDone(() async => await albumController.getAlbums());
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    userController.albumList.clear();
+    albumController.albumList.clear();
     super.dispose();
   }
 
@@ -62,13 +64,13 @@ class _ChooseAlbumToShareScreenState extends State<ChooseAlbumToShareScreen> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: userController.albumList
+                      children: albumController.albumList
                           .map((album) => GestureDetector(
                         onTap: () {
                           showDialog(context: context, builder: (context){
                             return showAlertDialog(context: context, onSubmitFunction: () async {
-                              await userController.addItemsToAlbum(albumId: album.id!);
-                              await userController.getAlbums();
+                              await albumController.addItemsToAlbum(albumId: album.id!);
+                              await albumController.getAlbums();
                               Get.back();
                             }, title: 'Album ${album.title}', widget: AppText(content: 'Add ${countNumberOfPhotosToAdd()} photos to this album'));
                           });

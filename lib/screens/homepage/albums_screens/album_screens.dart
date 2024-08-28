@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_photo_app/controllers/album_controller.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/screens/homepage/albums_screens/album_details.dart';
 import 'package:google_photo_app/screens/homepage/albums_screens/create_album_button.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
@@ -18,17 +20,19 @@ class AlbumScreens extends StatefulWidget {
 class _AlbumScreensState extends State<AlbumScreens> {
   final AppController appController = Get.find();
   final UserController userController = Get.find();
+  final AlbumController albumController = Get.find();
   @override
   void initState() {
     // TODO: implement initState
-    onWidgetBuildDone(() async => await userController.getAlbums());
+    onWidgetBuildDone(() async => await albumController.getAlbums());
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    userController.albumList.clear();
+    albumController.albumList.clear();
+    print("Dispose");
     super.dispose();
   }
 
@@ -46,50 +50,64 @@ class _AlbumScreensState extends State<AlbumScreens> {
   _buildAlbumBody() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_buildTitleAndButtonsAction(), Dimens.height10, _buildAlbumsList()],
+      children: [
+        _buildTitleAndButtonsAction(),
+        Dimens.height10,
+        Obx(() => albumController.albumList.isEmpty
+            ? Expanded(
+              child: Center(
+                  child: AppText(
+                    content: "No albums found. Please Create New",
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+            )
+            : _buildAlbumsList())
+      ],
     );
   }
 
   _buildAlbumsList() {
-    return Obx(
-      () => userController.albumList.isEmpty
-          ? Expanded(
-              child: Center(
-                child: AppText(
-                  content: 'No Album Found, Create New',
-                  fontWeight: FontWeight.bold,
-                  textSize: Dimens.font_size_title,
+    return Wrap(
+      spacing: 3.0,
+      runSpacing: Dimens.sizeValue15,
+      alignment: WrapAlignment.start,
+      children: albumController.albumList.value
+          .map((album) => GestureDetector(
+                onTap: () => Get.to(() => AlbumDetails(album: album)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 120, // Calculate width for 5 images per row
+                      height: 120,
+                      child: album.coverPhotoBaseUrl == ""
+                          ? const Center(
+                              child: Icon(Icons.photo),
+                            )
+                          : Image.network(
+                              "${album!.coverPhotoBaseUrl}=w600-h400",
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    Dimens.height5,
+                    SizedBox(
+                        width: 120,
+                        child: AppText(
+                          content: album.title,
+                          maxLine: 1,
+                        )),
+                    Dimens.height5,
+                    AppText(
+                      content: album.mediaItemsCount == null
+                          ? "0"
+                          : album.mediaItemsCount.toString(),
+                      color: AppColor.grey,
+                    )
+                  ],
                 ),
-              ),
-            )
-          : Wrap(
-              spacing: 3.0,
-              runSpacing: Dimens.sizeValue15,
-              alignment: WrapAlignment.start,
-              children: userController.albumList
-                  .map((album) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                            width: 120, // Calculate width for 5 images per row
-                            height: 120,
-                            child: album.coverPhotoBaseUrl == ""
-                                ? const Center(
-                                    child: Icon(Icons.photo),
-                                  )
-                                : Image.network(
-                                    "${album!.coverPhotoBaseUrl}=w600-h400",
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
-                      Dimens.height5,
-                      SizedBox(width: 120,child: AppText(content: album.title, maxLine: 1,)),
-                      Dimens.height5,
-                      AppText(content: album.mediaItemsCount == null ? "0" : album.mediaItemsCount.toString(), color: AppColor.grey,)
-                    ],
-                  ))
-                  .toList(),
-            ),
+              ))
+          .toList(),
     );
   }
 

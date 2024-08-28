@@ -101,4 +101,37 @@ class AlbumService {
       print('An unexpected error occurred: $e');
     }
   }
+
+  ///GET MEDIA ITEMS IN ALBUM
+  Future<List<dynamic>> getMediaItemsInAlbum(
+      {required String accessToken, required String albumId}) async {
+    List<dynamic> mediaItemsList = [];
+
+    try {
+      final response = await dio.post(
+        "${_baseAlbumURL}mediaItems:search",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: {
+          'albumId': albumId,
+          'pageSize': 50,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        mediaItemsList = response.data['mediaItems'] ?? [];
+        print('Successfully retrieved media items');
+      } else {
+        print('Failed to retrieve media items: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Error retrieving media items: ${e.response?.data}');
+    }
+
+    return mediaItemsList;
+  }
 }

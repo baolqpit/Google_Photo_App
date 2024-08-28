@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_photo_app/controllers/album_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
@@ -15,11 +16,12 @@ class CreateAlbumButton extends StatefulWidget {
 
 class _CreateAlbumButtonState extends State<CreateAlbumButton> {
   final UserController userController = Get.find();
+  final AlbumController albumController = Get.find();
   TextEditingController albumNameController = TextEditingController();
   @override
   void dispose() {
     // TODO: implement dispose
-    userController.albumList.clear();
+    albumController.albumList.clear();
     super.dispose();
   }
   @override
@@ -34,7 +36,7 @@ class _CreateAlbumButtonState extends State<CreateAlbumButton> {
                   context: context,
                   onSubmitFunction: () async {
                     await userController.createAlbum(albumTitle: albumNameController.text);
-                    await userController.getAlbums();
+                    await albumController.getAlbums();
                     Get.back();
                   },
                   widget: Column(
