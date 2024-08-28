@@ -18,6 +18,13 @@ class PhotoApp extends StatefulWidget {
 class _PhotoAppState extends State<PhotoApp> {
   final AppController appController = Get.find();
   final UserController userController = Get.find();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    appController.currentBottomIndex.value = 0;
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(

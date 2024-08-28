@@ -66,43 +66,9 @@ class _ImageDetailsState extends State<ImageDetails> {
               },
             ),
           ),
-          Align(
-            alignment: AlignmentDirectional.bottomEnd,
-            child: _buildButtonsAction(mediaItem: imageController.mediaItemList[imageController.mediaItemIndex.value!]!),
-          ),
         ],
       ),
     ));
   }
 
-  _buildButtonsAction({required MediaItem mediaItem}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        _buildFavouriteButton(),
-        _buildDeleteButton(mediaItem: mediaItem),
-      ],
-    );
-  }
-
-  _buildFavouriteButton() {
-    return IconButton(
-      onPressed: () {},
-      icon: const Icon(Icons.favorite_outline),
-      iconSize: 40,
-    );
-  }
-
-  _buildDeleteButton({required MediaItem mediaItem}) {
-    return IconButton(
-      onPressed: () {
-        showDialog(context: context, builder: (context){
-          return showAlertDialog(title: "Confirm delete photo" ,context: context, onSubmitFunction: (){ Get.back();
-          }, widget: AppText(content: 'I found that Google Photo API does not support this feature, so I skip the delete feature'));
-        });
-      },
-      icon: const Icon(Icons.delete_outlined),
-      iconSize: 40,
-    );
-  }
 }
