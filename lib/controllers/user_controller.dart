@@ -75,4 +75,13 @@ class UserController extends GetxController {
     }
     appController.isLoading.value = false;
   }
+
+  ///ADD ITEMS TO ALBUM
+  addItemsToAlbum({required String albumId}) async {
+    appController.isLoading.value = true;
+    List<String> listMediaItemId = imageSelectedList.where((image) => image['isSelected'] == true).map<String>((image) => image['id']).toList();
+    print(listMediaItemId);
+    await AlbumService().addingMediaItemsToAnAlbum(listMediaItemId: listMediaItemId, albumId: albumId, accessToken: token.value!);
+    appController.isLoading.value = false;
+  }
 }

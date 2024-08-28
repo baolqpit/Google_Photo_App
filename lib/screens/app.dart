@@ -20,11 +20,11 @@ class _PhotoAppState extends State<PhotoApp> {
   final UserController userController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
       appBar: _buildAppBar(),
       body: _buildAppBody(),
-      bottomNavigationBar: _buildBottomBar(),
-    );
+      bottomNavigationBar: appController.selectingModeIsOn.value ? null :_buildBottomBar(),
+    ));
   }
 
   _buildAppBody(){

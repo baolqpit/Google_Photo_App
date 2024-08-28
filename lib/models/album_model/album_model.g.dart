@@ -12,7 +12,7 @@ _$AlbumModelImpl _$$AlbumModelImplFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String?,
       productUrl: json['productUrl'] as String?,
       isWriteable: json['isWriteable'] as bool?,
-      mediaItemsCount: (json['mediaItemsCount'] as num?)?.toInt(),
+      mediaItemsCount: json['mediaItemsCount'] as String?,
       coverPhotoBaseUrl: json['coverPhotoBaseUrl'] as String?,
       coverPhotoMediaItemId: json['coverPhotoMediaItemId'] as String?,
     );

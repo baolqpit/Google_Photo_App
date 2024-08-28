@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
+import 'package:google_photo_app/screens/homepage/images_screens/choose_album_to_share_screen.dart';
 import 'package:google_photo_app/screens/homepage/images_screens/image_details.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
 import 'package:google_photo_app/share/functions/functions.dart';
+import 'package:google_photo_app/share/widgets/dialogs.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -34,6 +36,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   void dispose() {
     userController.imagePath.value = "";
     userController.mediaItemList.clear();
+    userController.imageSelectedList.clear();
     scrollController.dispose();
     super.dispose();
   }
@@ -56,10 +59,29 @@ class _HomepageScreenState extends State<HomepageScreen> {
               child: Column(
                 children: <Widget>[
                   _buildImagesList(),
-                  // _buildButtonAction()
+
                 ],
               ),
             )),
+    );
+  }
+
+  _buildShareInAlbum(){
+    return GestureDetector(
+      onTap: () {
+        if(userController.imageSelectedList.any((item) => item['isSelected'] == true)){
+          Get.to(() => const ChooseAlbumToShareScreen());
+        } else {
+          showAppWarningDialog(context: context, content: "You have to chose at least 1 photo");
+        }
+      },
+      child: Align(
+        alignment: AlignmentDirectional.bottomEnd,
+        child: CircleAvatar(
+          backgroundColor: AppColor.lightGrey.withOpacity(0.5),
+          child: const Icon(Icons.share),
+        ),
+      ),
     );
   }
 
@@ -79,28 +101,30 @@ class _HomepageScreenState extends State<HomepageScreen> {
               ],
             ),
             Dimens.height10,
-            Wrap(
+            appController.selectingModeIsOn.value ? _buildShareInAlbum() : SizedBox(),
+            Dimens.height10,
+            userController.mediaItemList.isEmpty ? Center(child: AppText(content: 'No Photo Found. Please add new'),) : Wrap(
               spacing: 3.0,
               runSpacing: 3.0,
               alignment: WrapAlignment.start,
               children:
-                  List.generate(userController.mediaItemList.length, (index) {
+              List.generate(userController.mediaItemList.length, (index) {
                 var item = userController.mediaItemList[index];
                 return Stack(
                   children: <Widget>[
                     GestureDetector(
                       onTap: appController.selectingModeIsOn.value
                           ? () {
-                              setState(() {
-                                userController.imageSelectedList[index]
-                                        ['isSelected'] =
-                                    !userController.imageSelectedList[index]
-                                        ['isSelected'];
-                              });
-                            }
+                        setState(() {
+                          userController.imageSelectedList[index]
+                          ['isSelected'] =
+                          !userController.imageSelectedList[index]
+                          ['isSelected'];
+                        });
+                      }
                           : () => Get.to(() => ImageDetails(
-                                initialIndex: index,
-                              )),
+                        initialIndex: index,
+                      )),
                       child: SizedBox(
                         width: 120,
                         height: 120,
@@ -111,24 +135,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
                       ),
                     ),
                     Obx(() =>
-                        userController.imageSelectedList[index]['isSelected']
-                            ? const Positioned(
-                                bottom: 5,
-                                right: 5,
-                                child: CircleAvatar(
-                                  radius: 15,
-                                  backgroundColor: AppColor.primary,
-                                  child: Icon(
-                                    Icons.check,
-                                    color: AppColor.white,
-                                  ),
-                                ),
-                              )
-                            : const SizedBox())
+                    userController.imageSelectedList[index]['isSelected']
+                        ? const Positioned(
+                      bottom: 5,
+                      right: 5,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: AppColor.primary,
+                        child: Icon(
+                          Icons.check,
+                          color: AppColor.white,
+                        ),
+                      ),
+                    )
+                        : const SizedBox())
                   ],
                 );
               }),
-            ),
+            )
           ],
         ));
   }

@@ -29,7 +29,7 @@ mixin _$AlbumModel {
   @JsonKey(name: 'isWriteable')
   bool? get isWriteable => throw _privateConstructorUsedError;
   @JsonKey(name: 'mediaItemsCount')
-  int? get mediaItemsCount => throw _privateConstructorUsedError;
+  String? get mediaItemsCount => throw _privateConstructorUsedError;
   @JsonKey(name: 'coverPhotoBaseUrl')
   String? get coverPhotoBaseUrl => throw _privateConstructorUsedError;
   @JsonKey(name: 'coverPhotoMediaItemId')
@@ -52,7 +52,7 @@ abstract class $AlbumModelCopyWith<$Res> {
       @JsonKey(name: 'title') String? title,
       @JsonKey(name: 'productUrl') String? productUrl,
       @JsonKey(name: 'isWriteable') bool? isWriteable,
-      @JsonKey(name: 'mediaItemsCount') int? mediaItemsCount,
+      @JsonKey(name: 'mediaItemsCount') String? mediaItemsCount,
       @JsonKey(name: 'coverPhotoBaseUrl') String? coverPhotoBaseUrl,
       @JsonKey(name: 'coverPhotoMediaItemId') String? coverPhotoMediaItemId});
 }
@@ -98,7 +98,7 @@ class _$AlbumModelCopyWithImpl<$Res, $Val extends AlbumModel>
       mediaItemsCount: freezed == mediaItemsCount
           ? _value.mediaItemsCount
           : mediaItemsCount // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       coverPhotoBaseUrl: freezed == coverPhotoBaseUrl
           ? _value.coverPhotoBaseUrl
           : coverPhotoBaseUrl // ignore: cast_nullable_to_non_nullable
@@ -124,7 +124,7 @@ abstract class _$$AlbumModelImplCopyWith<$Res>
       @JsonKey(name: 'title') String? title,
       @JsonKey(name: 'productUrl') String? productUrl,
       @JsonKey(name: 'isWriteable') bool? isWriteable,
-      @JsonKey(name: 'mediaItemsCount') int? mediaItemsCount,
+      @JsonKey(name: 'mediaItemsCount') String? mediaItemsCount,
       @JsonKey(name: 'coverPhotoBaseUrl') String? coverPhotoBaseUrl,
       @JsonKey(name: 'coverPhotoMediaItemId') String? coverPhotoMediaItemId});
 }
@@ -168,7 +168,7 @@ class __$$AlbumModelImplCopyWithImpl<$Res>
       mediaItemsCount: freezed == mediaItemsCount
           ? _value.mediaItemsCount
           : mediaItemsCount // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       coverPhotoBaseUrl: freezed == coverPhotoBaseUrl
           ? _value.coverPhotoBaseUrl
           : coverPhotoBaseUrl // ignore: cast_nullable_to_non_nullable
@@ -210,7 +210,7 @@ class _$AlbumModelImpl implements _AlbumModel {
   final bool? isWriteable;
   @override
   @JsonKey(name: 'mediaItemsCount')
-  final int? mediaItemsCount;
+  final String? mediaItemsCount;
   @override
   @JsonKey(name: 'coverPhotoBaseUrl')
   final String? coverPhotoBaseUrl;
@@ -267,7 +267,7 @@ abstract class _AlbumModel implements AlbumModel {
       @JsonKey(name: 'title') final String? title,
       @JsonKey(name: 'productUrl') final String? productUrl,
       @JsonKey(name: 'isWriteable') final bool? isWriteable,
-      @JsonKey(name: 'mediaItemsCount') final int? mediaItemsCount,
+      @JsonKey(name: 'mediaItemsCount') final String? mediaItemsCount,
       @JsonKey(name: 'coverPhotoBaseUrl') final String? coverPhotoBaseUrl,
       @JsonKey(name: 'coverPhotoMediaItemId')
       final String? coverPhotoMediaItemId}) = _$AlbumModelImpl;
@@ -289,7 +289,7 @@ abstract class _AlbumModel implements AlbumModel {
   bool? get isWriteable;
   @override
   @JsonKey(name: 'mediaItemsCount')
-  int? get mediaItemsCount;
+  String? get mediaItemsCount;
   @override
   @JsonKey(name: 'coverPhotoBaseUrl')
   String? get coverPhotoBaseUrl;

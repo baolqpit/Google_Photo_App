@@ -10,7 +10,7 @@ class AlbumModel with _$AlbumModel {
     @JsonKey(name: 'title') String? title,
     @JsonKey(name: 'productUrl') String? productUrl,
     @JsonKey(name: 'isWriteable') bool? isWriteable,
-    @JsonKey(name: 'mediaItemsCount') int? mediaItemsCount,
+    @JsonKey(name: 'mediaItemsCount') String? mediaItemsCount,
     @JsonKey(name: 'coverPhotoBaseUrl') String? coverPhotoBaseUrl,
     @JsonKey(name: 'coverPhotoMediaItemId') String? coverPhotoMediaItemId,
 
