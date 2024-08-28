@@ -4,7 +4,7 @@ import 'package:google_photo_app/controllers/album_controller.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/models/album_model/album_model.dart';
-import 'package:google_photo_app/screens/homepage/images_screens/image_details.dart';
+import 'package:google_photo_app/screens/homepage/albums_screens/images_in_album_details.dart';
 import 'package:google_photo_app/share/app_general/app_color.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
@@ -39,6 +39,8 @@ class _AlbumDetailsState extends State<AlbumDetails> {
   void dispose() {
     // TODO: implement dispose
     albumController.mediaItemListInAlbum.clear();
+    albumController.mediaSelectedInAlbum.clear();
+    albumController.selectingModeIsOn.value = false;
     super.dispose();
   }
 
@@ -204,7 +206,9 @@ class _AlbumDetailsState extends State<AlbumDetails> {
                           .mediaSelectedInAlbum[index]
                       ['isSelected'];
                     });
-                  } : () {},
+                  } : () {
+                    Get.to(() => ImagesInAlbumDetails(initialIndex: index));
+                  },
                   child: SizedBox(
                     width: 120,
                     height: 120,

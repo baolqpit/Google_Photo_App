@@ -14,6 +14,7 @@ class AlbumController extends GetxController {
   RxList<dynamic> mediaSelectedInAlbum = RxList<dynamic>([]);
   RxList<AlbumModel> albumList = RxList<AlbumModel>([]);
   Rx<bool> selectingModeIsOn = Rx<bool>(false);
+  Rx<int?> mediaItemIndex = Rx<int?>(null);
 
 
   ///GET PHOTOS IN ALBUM
