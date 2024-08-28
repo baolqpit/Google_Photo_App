@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/album_controller.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
+import 'package:google_photo_app/controllers/image_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
@@ -22,6 +23,7 @@ class ChooseAlbumToShareScreen extends StatefulWidget {
 class _ChooseAlbumToShareScreenState extends State<ChooseAlbumToShareScreen> {
   final UserController userController = Get.find();
   final AppController appController = Get.find();
+  final ImageController imageController = Get.find();
   final AlbumController albumController = Get.find();
   @override
   void initState() {
@@ -105,7 +107,7 @@ class _ChooseAlbumToShareScreenState extends State<ChooseAlbumToShareScreen> {
 
   countNumberOfPhotosToAdd(){
     int numberOfPhotos = 0;
-    userController.imageSelectedList.forEach((item) {
+    imageController.imageSelectedList.forEach((item) {
       if (item['isSelected']){
         numberOfPhotos++;
       }

@@ -35,7 +35,7 @@ class _CreateAlbumButtonState extends State<CreateAlbumButton> {
                   title: "Create New Album",
                   context: context,
                   onSubmitFunction: () async {
-                    await userController.createAlbum(albumTitle: albumNameController.text);
+                    await albumController.createAlbum(albumTitle: albumNameController.text);
                     await albumController.getAlbums();
                     Get.back();
                   },

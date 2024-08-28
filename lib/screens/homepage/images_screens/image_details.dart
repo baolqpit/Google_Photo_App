@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_photo_app/controllers/app_controller.dart';
+import 'package:google_photo_app/controllers/image_controller.dart';
 import 'package:google_photo_app/controllers/user_controller.dart';
 import 'package:google_photo_app/models/media_item/media_item.dart';
 import 'package:google_photo_app/share/app_general/app_text.dart';
@@ -20,19 +21,20 @@ class ImageDetails extends StatefulWidget {
 class _ImageDetailsState extends State<ImageDetails> {
   final UserController userController = Get.find();
   final AppController appController = Get.find();
+  final ImageController imageController = Get.find();
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    userController.mediaItemIndex.value = widget.initialIndex;
+    imageController.mediaItemIndex.value = widget.initialIndex;
     _pageController = PageController(initialPage: widget.initialIndex);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    userController.mediaItemIndex.value = null;
+    imageController.mediaItemIndex.value = null;
     super.dispose();
   }
 
@@ -45,18 +47,18 @@ class _ImageDetailsState extends State<ImageDetails> {
           Expanded(
             child: PageView.builder(
               onPageChanged: (index){
-                userController.mediaItemIndex.value = index;
-                print(userController.mediaItemIndex.value);
+                imageController.mediaItemIndex.value = index;
+                print(imageController.mediaItemIndex.value);
               },
               controller: _pageController,
-              itemCount: userController.mediaItemList.length,
+              itemCount: imageController.mediaItemList.length,
               itemBuilder: (context, index) {
                 return Center(
                   child: SizedBox(
                     width: Get.width,
                     height: 500,
                     child: Image.network(
-                      "${userController.mediaItemList[index]!.baseUrl}=w600-h400",
+                      "${imageController.mediaItemList[index]!.baseUrl}=w600-h400",
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -66,7 +68,7 @@ class _ImageDetailsState extends State<ImageDetails> {
           ),
           Align(
             alignment: AlignmentDirectional.bottomEnd,
-            child: _buildButtonsAction(mediaItem: userController.mediaItemList[userController.mediaItemIndex.value!]!),
+            child: _buildButtonsAction(mediaItem: imageController.mediaItemList[imageController.mediaItemIndex.value!]!),
           ),
         ],
       ),
