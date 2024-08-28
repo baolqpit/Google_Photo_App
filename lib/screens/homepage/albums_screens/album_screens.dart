@@ -32,7 +32,6 @@ class _AlbumScreensState extends State<AlbumScreens> {
   void dispose() {
     // TODO: implement dispose
     albumController.albumList.clear();
-    print("Dispose");
     super.dispose();
   }
 

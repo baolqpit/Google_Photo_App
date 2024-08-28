@@ -19,7 +19,13 @@ class GoogleAuthService {
   }
 
   Future<void> signOutGoogle() async {
-    await _googleSignIn.signOut();
+    try {
+      await _googleSignIn.signOut();  // Signs out from the app
+      await _googleSignIn.disconnect(); // Disconnects the account
+      print("User signed out and disconnected from Google");
+    } catch (e) {
+      print("Error signing out from Google: $e");
+    }
   }
 
   GoogleSignInAccount? get currentUser => _googleSignIn.currentUser;

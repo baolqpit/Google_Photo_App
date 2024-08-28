@@ -50,7 +50,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               color: AppColor.white),
           child: GestureDetector(
             onTap: () async {
-              GoogleAuthService().signOutGoogle;
+              await GoogleAuthService().signOutGoogle();
               Get.offAll(() => const LogInScreen());
     } ,
             child: Row(
