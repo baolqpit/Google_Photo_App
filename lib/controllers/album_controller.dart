@@ -11,7 +11,9 @@ class AlbumController extends GetxController {
   final UserController userController = Get.find();
   final ImageController imageController = Get.find();
   RxList<MediaItem?> mediaItemListInAlbum = RxList<MediaItem?>([]);
+  RxList<dynamic> mediaSelectedInAlbum = RxList<dynamic>([]);
   RxList<AlbumModel> albumList = RxList<AlbumModel>([]);
+  Rx<bool> selectingModeIsOn = Rx<bool>(false);
 
 
   ///GET PHOTOS IN ALBUM
@@ -20,6 +22,11 @@ class AlbumController extends GetxController {
     var res = await AlbumService().getMediaItemsInAlbum(accessToken: userController.token.value!, albumId: albumId);
     if (res != null){
       mediaItemListInAlbum.value = res.map((json) => MediaItem.fromJson(json)).toList();
+      mediaSelectedInAlbum.value = List.generate(mediaItemListInAlbum.length, (_) =>
+      {
+        'id': mediaItemListInAlbum[_]!.id,
+        'isSelected': false
+      });
     }
     appController.isLoading.value = false;
   }
@@ -46,6 +53,14 @@ class AlbumController extends GetxController {
   createAlbum({required String albumTitle}) async {
     appController.isLoading.value = true;
     await AlbumService().createAlbum(accessToken: userController.token.value!, albumTitle: albumTitle);
+    appController.isLoading.value = false;
+  }
+
+  ///REMOVE ITEMS FROM ALBUM
+  removeItemsFromAlbum({required String albumId}) async{
+    appController.isLoading.value = true;
+    List<String> listMediaItemId = mediaSelectedInAlbum.where((image) => image['isSelected'] == true).map<String>((image) => image['id']).toList();
+    await AlbumService().removeMediaItemsFromAlbum(accessToken: userController.token.value!, albumId: albumId, mediaItemIds: listMediaItemId);
     appController.isLoading.value = false;
   }
 }

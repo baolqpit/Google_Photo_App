@@ -10,6 +10,7 @@ import 'package:google_photo_app/share/app_general/app_text.dart';
 import 'package:google_photo_app/share/dimens/dimens.dart';
 import 'package:google_photo_app/share/functions/functions.dart';
 import 'package:google_photo_app/share/widgets/custom_app_bar.dart';
+import 'package:google_photo_app/share/widgets/dialogs.dart';
 
 class AlbumDetails extends StatefulWidget {
   final AlbumModel album;
@@ -56,6 +57,8 @@ class _AlbumDetailsState extends State<AlbumDetails> {
                       children: <Widget>[
                         _buildActionButtons(),
                         Dimens.height10,
+                        albumController.selectingModeIsOn.value ? _buildDeleteButton() : SizedBox(),
+                        Dimens.height10,
                         _buildImagesList(),
                       ],
                     )),
@@ -71,16 +74,112 @@ class _AlbumDetailsState extends State<AlbumDetails> {
           fontWeight: FontWeight.bold,
           textSize: Dimens.font_size_title,
         ),
-        Container(
-            padding: const EdgeInsets.symmetric(
-                vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
-            decoration: BoxDecoration(
-                color: AppColor.lightGrey.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(Dimens.circular12)),
-            child: AppText(
-              content: 'Select',
-            ))
+        albumController.selectingModeIsOn.value
+            ? _buildButtonsOnSelected()
+            : GestureDetector(
+                onTap: () {
+                  albumController.selectingModeIsOn.value = true;
+                },
+                child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: Dimens.padding_5,
+                        horizontal: Dimens.padding_8),
+                    decoration: BoxDecoration(
+                        color: AppColor.lightGrey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(Dimens.circular12)),
+                    child: AppText(
+                      content: 'Select',
+                    )),
+              )
       ],
+    );
+  }
+
+  _buildButtonsOnSelected() {
+    return Row(
+      children: <Widget>[
+        _buildSelectAll(),
+        Dimens.width5,
+        _buildCancelButton()
+      ],
+    );
+  }
+  
+  _buildDeleteButton(){
+    return GestureDetector(
+      onTap: () {
+        if (albumController.mediaSelectedInAlbum
+            .any((item) => item['isSelected'] == true)) {
+          showDialog(context: context, builder: (context){
+            return showAlertDialog(context: context, onSubmitFunction: () async {
+              await albumController.removeItemsFromAlbum(albumId: widget.album.id!);
+              await albumController.getPhotosInAlbum(albumId: widget.album.id!);
+              await albumController.getAlbums();
+              Get.back();
+            }, widget: AppText(content: 'Are you sure to remove these items from this album?'), title: 'Confirm Remove');
+          });
+        } else {
+          showAppWarningDialog(
+              context: context, content: "You have to chose at least 1 photo");
+        }
+      },
+      child: Align(
+        alignment: AlignmentDirectional.bottomEnd,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+              vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+          decoration: BoxDecoration(
+              color: AppColor.lightGrey.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(Dimens.circular12)
+          ),
+          child: const Icon(Icons.delete_outlined),
+        ),
+      ),
+    );
+  }
+
+  _buildSelectAll() {
+    return GestureDetector(
+      onTap: () {
+        albumController.mediaSelectedInAlbum.value = List.generate(
+            albumController.mediaItemListInAlbum.length,
+                (_) => {
+              "id": albumController.mediaItemListInAlbum[_]!.id,
+              "isSelected": true,
+            });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+        decoration: BoxDecoration(
+          color: AppColor.lightGrey.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(Dimens.circular12)
+        ),
+        child: AppText(content: 'Select All'),
+      ),
+    );
+  }
+
+  _buildCancelButton() {
+    return GestureDetector(
+      onTap: () {
+        albumController.selectingModeIsOn.value = !albumController.selectingModeIsOn.value;
+        albumController.mediaSelectedInAlbum.value = List.generate(
+            albumController.mediaItemListInAlbum.length,
+                (_) => {
+              "id": albumController.mediaItemListInAlbum[_]!.id,
+              "isSelected": false,
+            });
+      },
+      child: Container(
+          padding: const EdgeInsets.symmetric(
+              vertical: Dimens.padding_5, horizontal: Dimens.padding_8),
+          decoration: BoxDecoration(
+            color: AppColor.lightGrey.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(Dimens.circular12)
+          ),
+        child: AppText(content: "Cancel"),
+          ),
     );
   }
 
@@ -92,18 +191,20 @@ class _AlbumDetailsState extends State<AlbumDetails> {
           spacing: 3.0,
           runSpacing: 3.0,
           alignment: WrapAlignment.start,
-          children:
-          List.generate(albumController.mediaItemListInAlbum.length, (index) {
+          children: List.generate(albumController.mediaItemListInAlbum.length,
+              (index) {
             var item = albumController.mediaItemListInAlbum[index];
             return Stack(
               children: <Widget>[
                 GestureDetector(
-                  onTap: appController.selectingModeIsOn.value
-                      ? () {
-                  }
-                      : () => Get.to(() => ImageDetails(
-                    initialIndex: index,
-                  )),
+                  onTap: albumController.selectingModeIsOn.value ? () {
+                    setState(() {
+                      albumController.mediaSelectedInAlbum[index]
+                      ['isSelected'] = !albumController
+                          .mediaSelectedInAlbum[index]
+                      ['isSelected'];
+                    });
+                  } : () {},
                   child: SizedBox(
                     width: 120,
                     height: 120,
@@ -113,6 +214,21 @@ class _AlbumDetailsState extends State<AlbumDetails> {
                     ),
                   ),
                 ),
+                Obx(() => albumController.mediaSelectedInAlbum[index]
+                ['isSelected']
+                    ? const Positioned(
+                  bottom: 5,
+                  right: 5,
+                  child: CircleAvatar(
+                    radius: 15,
+                    backgroundColor: AppColor.primary,
+                    child: Icon(
+                      Icons.check,
+                      color: AppColor.white,
+                    ),
+                  ),
+                )
+                    : const SizedBox())
               ],
             );
           }),

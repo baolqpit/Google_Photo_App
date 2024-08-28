@@ -124,7 +124,7 @@ class AlbumService {
 
       if (response.statusCode == 200) {
         mediaItemsList = response.data['mediaItems'] ?? [];
-        print('Successfully retrieved media items');
+        print('Successfully retrieved media items ');
       } else {
         print('Failed to retrieve media items: ${response.statusCode}');
       }
@@ -133,5 +133,35 @@ class AlbumService {
     }
 
     return mediaItemsList;
+  }
+
+  ///REMOVE ITEMS FROM ALBUM
+  Future<void> removeMediaItemsFromAlbum({
+    required String accessToken,
+    required String albumId,
+    required List<String> mediaItemIds,
+  }) async {
+    try {
+      final response = await dio.post(
+        '${_baseAlbumURL}albums/$albumId:batchRemoveMediaItems',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',
+          },
+        ),
+        data: {
+          'mediaItemIds': mediaItemIds,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Successfully removed media items from album');
+      } else {
+        print('Failed to remove media items from album: ${response.statusCode}');
+      }
+    } on DioException catch (e) {
+      print('Error removing media items from album: ${e.response?.data}');
+    }
   }
 }
