@@ -55,14 +55,12 @@ class _AlbumScreensState extends State<AlbumScreens> {
           _buildTitleAndButtonsAction(),
           Dimens.height10,
           Obx(() => albumController.albumList.isEmpty
-              ? Expanded(
-                child: Center(
-                    child: AppText(
-                      content: "No albums found. Please Create New",
-                      fontWeight: FontWeight.bold,
-                    ),
+              ? Center(
+                  child: AppText(
+                    content: "No albums found. Please Create New",
+                    fontWeight: FontWeight.bold,
                   ),
-              )
+                )
               : _buildAlbumsList())
         ],
       ),
